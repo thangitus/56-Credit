@@ -1,10 +1,53 @@
 import React from "react";
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  AsyncStorage
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import IdentificationCard from "../Component/IdentificationCard";
+import SelfieCard from "../Component/SelfieCard";
+import PersonalIformationCard from "../Component/PersonalIformationCard";
 
 export default class HomeScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    AsyncStorage.clear()
+    this.state = {
+      pathCMND: null,
+      pathSelfie: null
+    };
+    AsyncStorage.setItem("pathCMND", null);
+    AsyncStorage.setItem("pathSelfie", null);
+  }
   navigate = screen => {
     this.props.navigation.navigate(screen);
+  };
+
+  componentDidMount = async () => {
+    const uriCMND = await this.props.navigation.getParam("uriCMND", null);
+    if (uriCMND) {
+      const uriSelfie = await AsyncStorage.getItem("pathSelfie");
+      AsyncStorage.mergeItem("pathCMND", uriCMND);
+      this.setState({
+        pathCMND: uriCMND,
+        pathSelfie: uriSelfie
+      });
+    }
+
+    const uriSelfie = await this.props.navigation.getParam("uriSelfie", null);
+    if (uriSelfie) {
+      const uriCMND = await AsyncStorage.getItem("pathCMND");
+      console.log("uriCMND: " + uriCMND);
+      AsyncStorage.mergeItem("pathSelfie", uriSelfie);
+      this.setState({
+        pathCMND: uriCMND,
+        pathSelfie: uriSelfie
+      });
+    }
   };
   render() {
     return (
@@ -17,28 +60,23 @@ export default class HomeScreen extends React.Component {
         >
           <Text style={styles.title}>Thông tin</Text>
         </LinearGradient>
-
-        <View style={styles.card}>
-          <InspectionCard
-            title="Chứng minh nhân dân"
-            imgSrc={require("../assets/cmnd.png")}
+        <ScrollView
+          style={{
+            flex: 0.78
+          }}
+        >
+          <IdentificationCard
             navigate={this.navigate}
-            screen='Camera'
+            pathCMND={this.state.pathCMND}
           />
-        </View>
 
-        <View style={styles.card}>
-          <InspectionCard
-            title="Ảnh tự chụp"
-            imgSrc={require("../assets/selfie.png")}
+          <SelfieCard
+            navigate={this.navigate}
+            pathSelfie={this.state.pathSelfie}
           />
-        </View>
-        <View style={styles.card}>
-          <InspectionCard
-            title="Thông tin cá nhân"
-            imgSrc={require("../assets/info.png")}
-          />
-        </View>
+
+          <PersonalIformationCard navigate={this.navigate} />
+        </ScrollView>
         <TouchableOpacity style={styles.buttonContainer}>
           <LinearGradient
             colors={["#21B69B", "#1DD185"]}
@@ -46,7 +84,7 @@ export default class HomeScreen extends React.Component {
             end={[1, 0]}
             style={styles.buttonGradient}
           >
-            <Text style={styles.title}>Gửi</Text>
+            <Text style={styles.send}>Gửi</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>
@@ -54,70 +92,24 @@ export default class HomeScreen extends React.Component {
   }
 }
 
-function InspectionCard(props) {
-  return (
-    <TouchableOpacity
-      style={cardStyle.container}
-      onPress={() => props.navigate(props.screen)}
-    >
-      <View style={cardStyle.header}>
-        <Image
-          source={props.imgSrc}
-          resizeMode="contain"
-          style={cardStyle.icon}
-        />
-
-        <Text style={cardStyle.title}>{props.title}</Text>
-      </View>
-
-      <View>
-        <Image
-          source={require("../assets/arrow.png")}
-          resizeMode="contain"
-          style={cardStyle.imgArrow}
-        />
-      </View>
-    </TouchableOpacity>
-  );
-}
-const cardStyle = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between"
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  title: {
-    color: "#616A66",
-    fontSize: 18,
-    marginStart: 10
-  },
-  imgArrow: {
-    width: 15,
-    height: 15
-  },
-  icon: {
-    width: 40,
-    height: 40
-  }
-});
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F4F4F4"
   },
   header: {
-    flex: 0.08,
-    paddingTop: 40,
+    flex: 0.12,
+    paddingTop: 20,
     paddingStart: 25,
     alignItems: "flex-start"
   },
   title: {
+    marginTop: 10,
+    fontSize: 20,
+    color: "white",
+    fontWeight: "500"
+  },
+  send: {
     fontSize: 20,
     color: "white",
     fontWeight: "500"
@@ -126,18 +118,13 @@ const styles = StyleSheet.create({
     flex: 0.5,
     backgroundColor: "white"
   },
-  card: {
-    marginTop: 20,
-    marginHorizontal: 10,
-    flex: 0.13,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 10
-  },
   buttonContainer: {
+    marginHorizontal: 40,
+    marginBottom: 20,
     marginTop: 20,
     flex: 0.12,
-    marginHorizontal: 10
+    justifyContent: "center",
+    alignItems: "center"
   },
   buttonGradient: {
     width: "100%",

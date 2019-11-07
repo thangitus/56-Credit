@@ -18,26 +18,24 @@ export default class CameraBackScreen extends React.Component {
     super(props);
     this.state = {
       hasCameraPermission: null,
-      type: Camera.Constants.Type.front,
-      pathCMND: null
+      type: Camera.Constants.Type.front
     };
   }
 
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === "granted" });
-    await ScreenOrientation.allowAsync(
-      ScreenOrientation.Orientation.PORTRAIT
-    );
+    await ScreenOrientation.allowAsync(ScreenOrientation.Orientation.PORTRAIT);
   }
 
   takePicture = async () => {
     if (this.camera) {
       const options = { quality: 1 };
       const data = await this.camera.takePictureAsync(options);
-      console.log(data.uri);
-      this.setState({ pathCMND: data.uri, openCamera: false });
-      UploadImg(data);
+      await ScreenOrientation.lockAsync(ScreenOrientation.Orientation.PORTRAIT);
+      console.log("Selfie: " + data.uri);
+      this.props.navigation.navigate("Home", { uriSelfie: data.uri });
+      // UploadImg(data);
     }
   };
 
@@ -51,13 +49,13 @@ export default class CameraBackScreen extends React.Component {
       return (
         <View style={styles.container}>
           <StatusBar hidden={true} />
-            <Camera
-              style={styles.camera}
-              type={this.state.type}
-              ref={ref => {
-                this.camera = ref;
-              }}
-            />
+          <Camera
+            style={styles.camera}
+            type={this.state.type}
+            ref={ref => {
+              this.camera = ref;
+            }}
+          />
           <TouchableOpacity
             style={styles.button}
             onPress={() => this.takePicture()}
@@ -79,11 +77,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "black",
     flexDirection: "column",
-    justifyContent: "center",
-    // alignItems: "center"
+    justifyContent: "center"
   },
   camera: {
-    flex: 0.9,
+    flex: 0.9
   },
   image: {
     width: 70,

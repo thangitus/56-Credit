@@ -18,15 +18,14 @@ export default class CameraBackScreen extends React.Component {
     super(props);
     this.state = {
       hasCameraPermission: null,
-      type: Camera.Constants.Type.back,
-      pathCMND: null
+      type: Camera.Constants.Type.back
     };
   }
 
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === "granted" });
-    await ScreenOrientation.allowAsync(
+    await ScreenOrientation.lockAsync(
       ScreenOrientation.Orientation.LANDSCAPE_LEFT
     );
   }
@@ -35,10 +34,16 @@ export default class CameraBackScreen extends React.Component {
     if (this.camera) {
       const options = { quality: 1 };
       const data = await this.camera.takePictureAsync(options);
-      console.log(data.uri);
-      this.setState({ pathCMND: data.uri, openCamera: false });
-      UploadImg(data);
+      await ScreenOrientation.lockAsync(ScreenOrientation.Orientation.PORTRAIT);
+      console.log("CMND: " + data.uri);
+      this.props.navigation.navigate("Home", { uriCMND: data.uri });
+      // UploadImg(data);
     }
+  };
+
+  navigate = async screen => {
+    await ScreenOrientation.lockAsync(ScreenOrientation.Orientation.PORTRAIT);
+    this.props.navigation.navigate(screen);
   };
 
   render() {
@@ -51,10 +56,20 @@ export default class CameraBackScreen extends React.Component {
       return (
         <View style={styles.container}>
           <StatusBar hidden={true} />
-          <View style={styles.cameraContainer} onLayout={this.onLayout}>
-            <Text style={styles.title} numberOfLines={1}>
-              Căn chỉnh mặt trước thẻ CMND của bạn vào ô bên và chụp ảnh
-            </Text>
+          <View style={styles.cameraContainer}>
+            <View style={styles.titleConainer}>
+              <TouchableOpacity onPress={() => this.navigate("Home", null)}>
+                <Image
+                  source={require("../assets/ic_close.png")}
+                  resizeMode="contain"
+                  style={styles.imgClose}
+                />
+              </TouchableOpacity>
+
+              <Text style={styles.title} numberOfLines={1}>
+                Căn chỉnh mặt trước thẻ CMND của bạn vào ô bên và chụp ảnh
+              </Text>
+            </View>
             <Camera
               style={styles.camera}
               type={this.state.type}
@@ -98,12 +113,20 @@ const styles = StyleSheet.create({
   camera: {
     flex: 0.9
   },
-  title: {
+  titleConainer: {
+    paddingHorizontal: 20,
+    justifyContent: "space-between",
     marginTop: 10,
     flex: 0.1,
+    flexDirection: "row"
+  },
+  title: {
     color: "black",
-    alignSelf: "center",
     textAlign: "center"
+  },
+  imgClose: {
+    width: 15,
+    height: 15
   },
   image: {
     width: 70,
