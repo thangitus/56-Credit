@@ -60,9 +60,14 @@ export default class HomeScreen extends React.Component {
         >
           <Text style={styles.title}>Thông tin</Text>
         </LinearGradient>
+
         <ScrollView
+          contentContainerStyle={{
+            flexDirection: "column",
+          }}
           style={{
-            flex: 0.8,
+          flex: 0.8,
+
           }}
         >
           <IdentificationCard
@@ -122,7 +127,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     marginBottom: 20,
     marginTop: 20,
-    height: "15%",
+    height: 56,
     justifyContent: "center",
     alignItems: "center"
   },
