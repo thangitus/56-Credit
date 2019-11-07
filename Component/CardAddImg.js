@@ -33,11 +33,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginHorizontal: 10,
     backgroundColor: "white",
-    borderRadius: 20,
-    paddingBottom: 10,
-    paddingTop: 10,
-    paddingStart: 20,
-    paddingEnd: 10
+    borderRadius: 8,
+    padding: 16
   },
   header: {
     flexDirection: "row",
@@ -45,7 +42,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#616A66",
-    fontSize: 18,
+    fontSize: 16,
     marginStart: 10
   },
   imgADD: {
@@ -53,8 +50,8 @@ const styles = StyleSheet.create({
     height: 140
   },
   icon: {
-    width: 40,
-    height: 40
+    width: 32,
+    height: 32
   },
   imgContainer: {
     marginTop: 10,

@@ -1,9 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet, Image,TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
-export default function  Card(props) {
-    return (
-      <View style={styles.card}>
+export default function Card(props) {
+  return (
+    <View style={styles.card}>
       <TouchableOpacity
         style={cardStyle.container}
         onPress={() => props.navigate(props.screen)}
@@ -26,15 +26,16 @@ export default function  Card(props) {
           />
         </View>
       </TouchableOpacity>
-      </View>
-    );
-  }
+    </View>
+  );
+}
 const cardStyle = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    paddingVertical: 6
   },
   header: {
     flexDirection: "row",
@@ -42,7 +43,7 @@ const cardStyle = StyleSheet.create({
   },
   title: {
     color: "#616A66",
-    fontSize: 18,
+    fontSize: 16,
     marginStart: 10
   },
   imgArrow: {
@@ -50,8 +51,8 @@ const cardStyle = StyleSheet.create({
     height: 15
   },
   icon: {
-    width: 40,
-    height: 40
+    width: 32,
+    height: 32
   }
 });
 const styles = StyleSheet.create({
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     flex: 0.13,
     backgroundColor: "white",
-    borderRadius: 20,
-    padding: 10
+    borderRadius: 8,
+    padding: 16
   }
 });

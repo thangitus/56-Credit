@@ -15,7 +15,7 @@ import PersonalIformationCard from "../Component/PersonalIformationCard";
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
-    AsyncStorage.clear()
+    AsyncStorage.clear();
     this.state = {
       pathCMND: null,
       pathSelfie: null
@@ -62,7 +62,7 @@ export default class HomeScreen extends React.Component {
         </LinearGradient>
         <ScrollView
           style={{
-            flex: 0.78
+            flex: 0.8,
           }}
         >
           <IdentificationCard
@@ -76,17 +76,17 @@ export default class HomeScreen extends React.Component {
           />
 
           <PersonalIformationCard navigate={this.navigate} />
+          <TouchableOpacity style={styles.buttonContainer}>
+            <LinearGradient
+              colors={["#21B69B", "#1DD185"]}
+              start={[0, 1]}
+              end={[1, 0]}
+              style={styles.buttonGradient}
+            >
+              <Text style={styles.send}>Gửi</Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </ScrollView>
-        <TouchableOpacity style={styles.buttonContainer}>
-          <LinearGradient
-            colors={["#21B69B", "#1DD185"]}
-            start={[0, 1]}
-            end={[1, 0]}
-            style={styles.buttonGradient}
-          >
-            <Text style={styles.send}>Gửi</Text>
-          </LinearGradient>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start"
   },
   title: {
-    marginTop: 10,
+    marginTop: 24,
     fontSize: 20,
     color: "white",
     fontWeight: "500"
@@ -119,17 +119,17 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
   buttonContainer: {
-    marginHorizontal: 40,
+    marginHorizontal: 8,
     marginBottom: 20,
     marginTop: 20,
-    flex: 0.12,
+    height: "15%",
     justifyContent: "center",
     alignItems: "center"
   },
   buttonGradient: {
     width: "100%",
     height: "100%",
-    borderRadius: 20,
+    borderRadius: 8,
     alignItems: "center",
     justifyContent: "center"
   }
